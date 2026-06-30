@@ -3,27 +3,57 @@
   "evals": [
     {
       "id": 1,
-      "name": "仅提供题目和字数-默认模板",
-      "prompt": "帮我生成一篇毕业论文，题目是《基于Spring Boot的高校学生管理系统设计与实现》，字数8000-10000字，计算机科学与技术专业。",
-      "expected_output": "使用默认QFNU模板格式生成的完整论文.docx，包含中英文标题页、中英文摘要、目录、7章正文（绪论→相关技术→需求分析→系统设计→系统实现→系统测试→总结展望）、致谢、参考文献。格式与模板一致。",
+      "name": "理科毕业论文-模板JSON驱动生成",
+      "prompt": "帮我生成一篇理科毕业论文，题目是《基于深度学习的网络入侵检测系统研究》，计算机科学与技术专业，字数5000字左右。",
+      "expected_output": "使用science.json模板生成的完整论文.docx，包含目录、中英文标题页、中英文摘要、正文多章（绪论→相关技术→需求分析→系统设计→系统实现→系统测试→总结展望）、参考文献。格式从science.json读取：正文宋体12pt、一级标题仿宋体14pt、A4纸张25mm/20mm边距。",
       "files": [],
-      "assertions": []
+      "assertions": [
+        {"id": "file-exists", "description": "生成的.docx文件存在且大小>10KB"},
+        {"id": "valid-docx", "description": "文件是有效的docx格式，可被python-docx打开"},
+        {"id": "a4-page-setup", "description": "页面设置为A4纸张(210×297mm)"},
+        {"id": "page-break-count", "description": "整个文档恰好1处分页符（目录→题目之间）"},
+        {"id": "has-toc", "description": "包含目录页，目录标题为「目  录」，且目录内容不为空"},
+        {"id": "has-abstract-zh", "description": "包含中文摘要（含「摘要」标签）"},
+        {"id": "has-abstract-en", "description": "包含英文摘要（含Abstract标签）"},
+        {"id": "has-references", "description": "包含参考文献部分"},
+        {"id": "body-font-correct", "description": "正文字体为宋体12pt（从science.json的BodyText读取）"},
+        {"id": "heading1-font-correct", "description": "一级标题为仿宋体14pt bold（从science.json的Heading1读取）"}
+      ]
     },
     {
       "id": 2,
-      "name": "提供自定义详细大纲",
-      "prompt": "我要写一篇毕业论文，题目是《基于深度学习的医学图像分割算法研究》，这是我的大纲：\n第一章 绪论（研究背景与意义、国内外研究现状）\n第二章 深度学习基础理论（CNN架构、U-Net及其变体、注意力机制）\n第三章 改进的医学图像分割算法（多尺度特征融合、边界感知损失函数）\n第四章 实验设计与结果分析（数据集与预处理、评价指标、对比实验与消融实验）\n第五章 总结与展望\n字数10000字左右，计算机专业。",
-      "expected_output": "严格按照用户提供的5章大纲生成的论文.docx，格式与默认QFNU模板一致。章节标题和顺序完全符合用户指定的结构，不添加或删除章节。",
+      "name": "课程论文-封面复制与个人信息填充",
+      "prompt": "帮我生成一篇课程论文，题目是《量子计算在密码学中的应用》，课程名称是量子信息导论，姓名王明，院系物理工程学院，专业软件工程，指导教师张伟教授，字数4000字。",
+      "expected_output": "使用course.json模板生成的课程论文.docx。封面从qfnu-template-course.docx复制，含学校名/课程名/Logo/信息表/日期。个人信息已填入：题目「量子计算在密码学中的应用」、姓名「王明」、院系「物理工程学院」、专业「软件工程」、指导教师「张伟教授」。两处分页符：封面→目录、目录→题目。",
       "files": [],
-      "assertions": []
+      "assertions": [
+        {"id": "file-exists", "description": "生成的.docx文件存在且大小>10KB"},
+        {"id": "valid-docx", "description": "文件是有效的docx格式"},
+        {"id": "has-cover", "description": "封面存在，包含'曲阜师范大学'文本"},
+        {"id": "cover-has-personal-info", "description": "封面含个人信息：王明、物理工程学院、软件工程、张伟"},
+        {"id": "cover-has-course-name", "description": "封面含课程名称：量子信息导论"},
+        {"id": "page-break-count", "description": "整个文档恰好2处分页符（封面→目录、目录→题目）"},
+        {"id": "has-toc", "description": "包含目录页且内容不为空"},
+        {"id": "has-references", "description": "包含参考文献部分"},
+        {"id": "a4-page-setup", "description": "页面设置为A4纸张"}
+      ]
     },
     {
       "id": 3,
-      "name": "使用自定义模板",
-      "prompt": "帮我写一篇毕业论文《基于机器学习的股票价格预测模型研究》，字数6000-8000字，金融工程方向。模板文件使用我提供的 template.docx。",
-      "expected_output": "使用用户自定义模板格式生成的论文.docx。格式应与自定义模板一致（而非默认QFNU模板）。需在测试时提供一个自定义模板文件。",
-      "files": ["custom-template.docx"],
-      "assertions": []
+      "name": "自定义大纲-严格遵循用户结构",
+      "prompt": "我要写一篇毕业论文《基于微服务的电商平台设计与实现》，这是我的大纲：\n第一章 绪论（背景与意义、国内外研究现状）\n第二章 相关技术（Spring Cloud微服务框架、Docker容器化部署）\n第三章 系统设计（微服务架构设计、数据库设计、API接口设计）\n第四章 系统实现（核心微服务实现、服务间通信）\n第五章 总结与展望\n\n字数4000字，计算机专业。严格按照我这个5章的结构来，不要自己增减章节。",
+      "expected_output": "严格按照用户指定的5章结构生成的论文.docx。章节数恰好5章，第一章绪论、第二章相关技术、第三章系统设计、第四章系统实现、第五章总结与展望。不从默认模板的7章结构。",
+      "files": [],
+      "assertions": [
+        {"id": "file-exists", "description": "生成的.docx文件存在且大小>10KB"},
+        {"id": "valid-docx", "description": "文件是有效的docx格式"},
+        {"id": "chapter-count-5", "description": "正文恰好5章（一级标题5个），不多不少"},
+        {"id": "chapter-1-title", "description": "第一章为「绪论」"},
+        {"id": "chapter-5-title", "description": "第五章为「总结与展望」"},
+        {"id": "no-extra-chapters", "description": "不包含用户大纲以外的章节（如'系统测试'）"},
+        {"id": "has-toc", "description": "包含目录页且内容不为空"},
+        {"id": "a4-page-setup", "description": "页面设置为A4纸张"}
+      ]
     }
   ]
 }

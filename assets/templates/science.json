@@ -16,7 +16,7 @@
       "font_ascii": "Times New Roman",
       "font_east_asia": "黑体",
       "font_size_pt": 16,
-      "bold": true,
+      "bold": false,
       "alignment": "center",
       "line_spacing": 1.0,
       "first_line_indent_chars": 0
@@ -25,14 +25,14 @@
       "font_ascii": "Times New Roman",
       "font_east_asia": "Times New Roman",
       "font_size_pt": 16,
-      "bold": true,
+      "bold": false,
       "alignment": "center",
       "line_spacing": 1.0,
       "first_line_indent_chars": 0
     },
     "TitleInfo": {
       "font_ascii": "Times New Roman",
-      "font_east_asia": "仿宋体",
+      "font_east_asia": "仿宋_GB2312",
       "font_size_pt": 12,
       "bold": false,
       "alignment": "center",
@@ -66,6 +66,7 @@
       "line_spacing": 1.0,
       "first_line_indent_chars": 2
     },
+
     "Abstract": {
       "font_ascii": "Times New Roman",
       "font_east_asia": "宋体",
@@ -80,7 +81,7 @@
       "font_east_asia": "黑体",
       "font_size_pt": 10.5,
       "bold": true,
-      "alignment": "center",
+      "alignment": "left",
       "line_spacing": 1.0,
       "first_line_indent_chars": 0
     },
@@ -98,7 +99,7 @@
       "font_east_asia": "Times New Roman",
       "font_size_pt": 10.5,
       "bold": true,
-      "alignment": "center",
+      "alignment": "left",
       "line_spacing": 1.0,
       "first_line_indent_chars": 0
     },
@@ -120,38 +121,42 @@
       "line_spacing": 1.0,
       "first_line_indent_chars": 0
     },
+
     "Heading1": {
       "font_ascii": "Times New Roman",
-      "font_east_asia": "仿宋体",
+      "font_east_asia": "仿宋_GB2312",
       "font_size_pt": 14,
-      "bold": true,
+      "bold": false,
       "alignment": "left",
       "line_spacing": 1.0,
       "space_before_pt": 6,
       "space_after_pt": 0,
-      "first_line_indent_chars": 0
+      "first_line_indent_chars": 0,
+      "outline_level": 0
     },
     "Heading2": {
       "font_ascii": "Times New Roman",
       "font_east_asia": "黑体",
-      "font_size_pt": 12,
-      "bold": true,
-      "alignment": "left",
-      "line_spacing": 1.0,
-      "space_before_pt": 0,
-      "space_after_pt": 0,
-      "first_line_indent_chars": 0
-    },
-    "Heading3": {
-      "font_ascii": "Times New Roman",
-      "font_east_asia": "仿宋体",
       "font_size_pt": 12,
       "bold": false,
       "alignment": "left",
       "line_spacing": 1.0,
       "space_before_pt": 0,
       "space_after_pt": 0,
-      "first_line_indent_chars": 0
+      "first_line_indent_chars": 0,
+      "outline_level": 1
+    },
+    "Heading3": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "仿宋_GB2312",
+      "font_size_pt": 12,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "space_before_pt": 0,
+      "space_after_pt": 0,
+      "first_line_indent_chars": 0,
+      "outline_level": 2
     },
     "BodyText": {
       "font_ascii": "Times New Roman",
@@ -193,6 +198,9 @@
     }
   },
 
+  "abstract_format": "inline",
+  "_abstract_format_note": "'inline'表示「摘要：×××…」标签加粗后紧跟内容在同一段落，左对齐。不换行、不居中。'block'表示旧式标签独立居中段落+内容另起段。",
+
   "page_order": [
     { "section": "toc", "page_break_after": true },
     { "section": "title_page", "page_break_after": false },
@@ -202,7 +210,7 @@
     { "section": "references", "page_break_after": false }
   ],
 
-  "cover": { "enabled": false },
+  "cover": null,
 
   "toc": {
     "title_style": "TOC_Title",
@@ -224,9 +232,9 @@
   },
 
   "heading_levels": [
-    { "level": 1, "style": "Heading1", "numbering_pattern": "\\d+\\s+" },
-    { "level": 2, "style": "Heading2", "numbering_pattern": "\\d+\\.\\d+\\s+" },
-    { "level": 3, "style": "Heading3", "numbering_pattern": "\\d+\\.\\d+\\.\\d+\\s+" }
+    { "level": 1, "style": "Heading1", "numbering_pattern": "\\d+\\s+", "outline_level": 0 },
+    { "level": 2, "style": "Heading2", "numbering_pattern": "\\d+\\.\\d+\\s+", "outline_level": 1 },
+    { "level": 3, "style": "Heading3", "numbering_pattern": "\\d+\\.\\d+\\.\\d+\\s+", "outline_level": 2 }
   ],
 
   "references": {

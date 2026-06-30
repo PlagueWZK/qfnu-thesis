@@ -294,12 +294,12 @@ def count_page_breaks(doc):
 1. 用 python-docx 打开 `assets/qfnu-template-course.docx`
 2. **先确认封面边界**：遍历文档前 20 个段落，找到最后一个封面相关段落（含换页符的空段落通常标志封面结束）。模板 B 中封面通常占用段落 0 到段落 16（含：学校名、课程名、报告类型、Logo、信息表、日期、以及末尾带换页符的空段落）。**不要硬编码边界值**——每次执行前确认实际的 `para_count` 边界。
 3. 定位并处理封面元素：
-   - `CoverSchool` 段落 → 学校名"曲阜师范大学"（保持不变）
-   - `CoverCourse` 段落 → 将 `<课程名称>` 替换为用户指定的课程名
-   - `CoverReport` 段落 → 保持不变（课程论文报告）
+   - 学校名段落 → "曲阜师范大学"（华文行楷 42pt 初号，保持不变）
+   - 课程名段落 → 将占位文本（如 `<课程名称>` 或模板原有课程名）替换为用户指定的课程名（华文行楷 42pt 初号 bold）
+   - 报告类型段落 → "课程论文报告"（黑体 42pt 初号，保持不变）
    - Logo 图片 → 保持不变（1.5英寸 × 1.5英寸，居中）
-   - 信息表（5行×4列）→ 填入题目/姓名/院系/专业/指导教师
-   - `StudentInfo` 段落 → 填入当前日期（格式：年   月   日）
+   - 信息表（5行×4列）→ 填入题目/姓名/院系/专业/指导教师（仿宋_GB2312 12pt）
+   - 日期段落 → 填入当前日期（宋体 15pt bold，格式：年   月   日）
 4. 封面之后的模板示例内容（从封面结束段落之后到参考文献示例）全部删除
 5. 保留 PaperH1/PaperH2/PaperH3 样式定义（TOC内容将在生成后手动填充）
 6. 在清理后的文档基础上继续生成目录、题目页、摘要、正文、参考文献
@@ -333,21 +333,21 @@ def count_page_breaks(doc):
 - 居中或与标签对齐
 - 不要在标签和内容之间加多余的空格或分隔符
 
-填充后的封面效果示例：
+填充后的封面效果示例（注意：实际字体为华文行楷/黑体初号42pt，非黑体小号字）：
 ```
-                  曲阜师范大学
-                    高等数学
-                 课程论文报告
+                  曲阜师范大学          ← 华文行楷 42pt (初号)
+                    高等数学            ← 华文行楷 42pt bold
+                 课程论文报告           ← 黑体 42pt (初号)
 
                    [学校 Logo]
 
               题    目    暗物质研究
-              姓    名    王政凯
+              姓    名    王政凯       ← 信息表为仿宋_GB2312 12pt
               院    系    物理工程学院
               专    业    软件工程
          指导教师    杨玉鹏    职  称    教授
 
-                 2026年6月30日
+                 2026年6月30日          ← 宋体 15pt bold
 ```
 
 #### ⚠️ 封面多 run 段落替换技巧
@@ -390,7 +390,14 @@ run.bold = True  # 统一设为加粗
 目录必须**在生成后立即可见、可读**，不能让用户看到
 「请在Word中右键此处，选择更新域以生成目录」的空白提示。采用以下方式：
 
-**首选方式：手动生成目录内容（立即可见，无需外部依赖）**
+**首选方式：手动生成目录内容 + 标题设置 outlineLvl（立即可见，且支持域更新）**
+
+**重要**：仅手动写入目录内容不够——用户编辑文档后无法用 Word「更新域」刷新目录。必须同时：
+1. 给所有正文标题段落设置 Word 内置 Heading 样式 + `outlineLvl`（模板 JSON 中 `heading_levels[].outline_level` 指定）
+2. 在目录页手动生成立即可见的目录条目
+3. 在手动目录后插入 TOC 域代码 `TOC \o "1-3" \h \z \u`，用户可在 Word 中右键更新
+
+这样用户打开文档时目录立即可见，编辑后也能用 Word 自动更新。
 
 在整篇论文正文和参考文献都生成完毕后，扫描所有标题段落，手动编写目录：
 
@@ -399,7 +406,21 @@ run.bold = True  # 统一设为加粗
 1. **扫描标题**：遍历文档中所有段落，识别标题：
    - 一级标题（章）：匹配 `^\d+[\s　]+` 或 `^第[一二三四五六七八九十\d]+章`，outline level 0
    - 二级标题（节）：匹配 `^\d+\.\d+[\s　]+`，outline level 1
+   - 三级标题（条）：匹配 `^\d+\.\d+\.\d+[\s　]+`，outline level 2
    - 忽略 TOC 区域内的标题文本（避免重复计入）
+
+   **同时给每个标题段落设置 Word heading 样式和 outlineLvl**（从模板 JSON `heading_levels[].outline_level` 读取）：
+   ```python
+   from docx.oxml.ns import qn
+   
+   # 对一级标题段落设置 outlineLvl=0
+   pPr = heading_para._element.get_or_add_pPr()
+   outline_lvl = parse_xml(f'<w:outlineLvl {qn("w:val")}="0"/>')
+   pPr.append(outline_lvl)
+   # 同时设置样式为 Heading 1（或模板 JSON 指定的样式名）
+   heading_para.style = doc.styles['Heading 1']
+   ```
+   这会确保用户编辑文档后可在 Word 中右键目录 →「更新域」自动刷新页码和条目。
 
 2. **估算页码**：由于 python-docx 无法获取实际渲染页码，按以下公式估算：
    ```
@@ -449,8 +470,29 @@ run.bold = True  # 统一设为加粗
    - 二级标题条目：缩进2字符，宋体小四(12pt)
    - 所有条目的页码右对齐，由点线前导符连接
 
-5. **插入位置**：目录内容插入到目录页「目  录」标题之后、第一个 `\f` 分节符之前。
+5. **插入位置和 TOC 域代码**：目录内容插入到目录页「目  录」标题之后。
    模板中已有的 TOC 占位段落需删除，替换为手动生成的目录条目。
+   
+   **在手动目录后插入 TOC 域代码**，以便用户编辑文档后可用 Word「更新域」刷新：
+   ```python
+   from docx.oxml.ns import qn
+   
+   # 在手动目录段落后插入 TOC 域代码
+   toc_para = doc.add_paragraph()
+   # 插入域代码：TOC \o "1-3" \h \z \u
+   fldChar_begin = parse_xml(f'<w:fldChar {qn("w:fldCharType")}="begin"/>')
+   run_begin = toc_para.add_run()
+   run_begin._element.append(fldChar_begin)
+   
+   instrText = parse_xml(f'<w:instrText xml:space="preserve"> TOC \\o "1-3" \\h \\z \\u </w:instrText>')
+   run_instr = toc_para.add_run()
+   run_instr._element.append(instrText)
+   
+   fldChar_end = parse_xml(f'<w:fldChar {qn("w:fldCharType")}="end"/>')
+   run_end = toc_para.add_run()
+   run_end._element.append(fldChar_end)
+   ```
+   Word 在打开文档时会自动解析此域代码并生成可点击更新的目录。
 
 **备选方式：TOC 域代码 + LibreOffice 自动更新**
 
@@ -469,7 +511,49 @@ python scripts/update_fields.py output.docx
 
 生成后验证：目录不为空，且目录中列出的章节与正文中的标题一一对应。
 
-#### 4.3 格式规范来源
+#### 4.3 摘要格式（极其重要 — 用户直接反馈）
+
+**摘要必须使用 inline 格式**：`"摘要："` 标签后紧跟内容，在**同一段落**内，**左对齐**（不居中）。
+
+格式来自模板 JSON 的 `abstract_format` 字段（`"inline"`），以及 `styles.AbstractLabel` + `styles.Abstract` 的字体规格。
+
+**正确格式**（参考理科/课程论文模板实测）：
+```
+摘要：暗物质是当代天体物理与粒子物理领域中的一大谜题……（五号宋体，200-300字）
+关键词：暗物质；宇宙演化；星系团（3-5个，五号宋体）
+```
+
+**生成方式**（python-docx）：
+```python
+# 中文摘要段落：标签加粗黑体 + 内容宋体，同一段落，左对齐
+p = doc.add_paragraph()
+p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT  # 不居中！
+label_run = p.add_run("摘要：")
+label_run.bold = True
+label_run.font.name = "黑体"
+content_run = p.add_run("本文研究了……（摘要正文内容）")
+content_run.font.name = "宋体"
+# 首行缩进2字符（与模板一致）
+p.paragraph_format.first_line_indent = Cm(0.74)  # 五号字2字符
+```
+
+**关键词段落**同理：`"关键词："` 标签加粗黑体 + 词列表宋体，同一段落，左对齐。
+
+**英文摘要**同理：
+```python
+p = doc.add_paragraph()
+p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
+label = p.add_run("Abstract: ")
+label.bold = True
+content = p.add_run("Dark matter is a major mystery...")
+```
+
+**绝对禁止**：
+- ❌ "摘要" 作为独立居中标题段落，内容另起一段
+- ❌ 摘要标签和内容分开两个段落
+- ❌ 摘要居中排版
+
+#### 4.4 格式规范来源
 
 **所有格式参数均来自第一步加载的模板 JSON 文件。**
 
