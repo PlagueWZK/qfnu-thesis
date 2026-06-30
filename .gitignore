@@ -11,6 +11,10 @@ Thumbs.db
 .vscode/
 .idea/
 
+# 用户自定义模板目录（不进入版本控制）
+# 仅匹配技能根目录下的 templates/，不影响 assets/templates/
+/templates/
+
 # Temp files
 *.tmp
 *.bak

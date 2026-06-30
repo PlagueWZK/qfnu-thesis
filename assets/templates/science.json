@@ -1,0 +1,241 @@
+{
+  "id": "science",
+  "name": "理科毕业论文",
+  "description": "曲阜师范大学本科毕业论文格式（理科），标准学术论文结构，无封面",
+  "source": "builtin",
+
+  "page_setup": {
+    "paper": { "width_mm": 210, "height_mm": 297 },
+    "margins": { "top_mm": 25, "bottom_mm": 20, "left_mm": 25, "right_mm": 20 },
+    "gutter_mm": 5,
+    "default_line_spacing": 1.0
+  },
+
+  "styles": {
+    "Title": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "黑体",
+      "font_size_pt": 16,
+      "bold": true,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "Title_EN": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "Times New Roman",
+      "font_size_pt": 16,
+      "bold": true,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "TitleInfo": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "仿宋体",
+      "font_size_pt": 12,
+      "bold": false,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "TOC_Title": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "黑体",
+      "font_size_pt": 14,
+      "bold": true,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "TOC_Level1": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "宋体",
+      "font_size_pt": 12,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "TOC_Level2": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "宋体",
+      "font_size_pt": 12,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 2
+    },
+    "Abstract": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "宋体",
+      "font_size_pt": 10.5,
+      "bold": false,
+      "alignment": "justify",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 2
+    },
+    "AbstractLabel": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "黑体",
+      "font_size_pt": 10.5,
+      "bold": true,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "Abstract_EN": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "Times New Roman",
+      "font_size_pt": 10.5,
+      "bold": false,
+      "alignment": "justify",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 2
+    },
+    "AbstractLabel_EN": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "Times New Roman",
+      "font_size_pt": 10.5,
+      "bold": true,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "Keywords": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "宋体",
+      "font_size_pt": 10.5,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "Keywords_EN": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "Times New Roman",
+      "font_size_pt": 10.5,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "Heading1": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "仿宋体",
+      "font_size_pt": 14,
+      "bold": true,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "space_before_pt": 6,
+      "space_after_pt": 0,
+      "first_line_indent_chars": 0
+    },
+    "Heading2": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "黑体",
+      "font_size_pt": 12,
+      "bold": true,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "space_before_pt": 0,
+      "space_after_pt": 0,
+      "first_line_indent_chars": 0
+    },
+    "Heading3": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "仿宋体",
+      "font_size_pt": 12,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "space_before_pt": 0,
+      "space_after_pt": 0,
+      "first_line_indent_chars": 0
+    },
+    "BodyText": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "宋体",
+      "font_size_pt": 12,
+      "bold": false,
+      "alignment": "justify",
+      "line_spacing": 1.0,
+      "space_before_pt": 0,
+      "space_after_pt": 0,
+      "first_line_indent_chars": 2
+    },
+    "Reference": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "宋体",
+      "font_size_pt": 10.5,
+      "bold": false,
+      "alignment": "left",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "FigureCaption": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "黑体",
+      "font_size_pt": 9,
+      "bold": false,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    },
+    "TableCaption": {
+      "font_ascii": "Times New Roman",
+      "font_east_asia": "黑体",
+      "font_size_pt": 9,
+      "bold": false,
+      "alignment": "center",
+      "line_spacing": 1.0,
+      "first_line_indent_chars": 0
+    }
+  },
+
+  "page_order": [
+    { "section": "toc", "page_break_after": true },
+    { "section": "title_page", "page_break_after": false },
+    { "section": "abstract_zh", "page_break_after": false },
+    { "section": "abstract_en", "page_break_after": false },
+    { "section": "body", "page_break_after": false },
+    { "section": "references", "page_break_after": false }
+  ],
+
+  "cover": { "enabled": false },
+
+  "toc": {
+    "title_style": "TOC_Title",
+    "levels": [
+      { "heading_level": 1, "style": "TOC_Level1", "indent_chars": 0 },
+      { "heading_level": 2, "style": "TOC_Level2", "indent_chars": 2 }
+    ],
+    "tab_stop_cm": 14.5
+  },
+
+  "title_page": {
+    "title_cn_style": "Title",
+    "title_en_style": "Title_EN",
+    "info_styles": ["TitleInfo"],
+    "info_fields": [
+      { "key": "student", "label": "学生" },
+      { "key": "advisor", "label": "指导教师" }
+    ]
+  },
+
+  "heading_levels": [
+    { "level": 1, "style": "Heading1", "numbering_pattern": "\\d+\\s+" },
+    { "level": 2, "style": "Heading2", "numbering_pattern": "\\d+\\.\\d+\\s+" },
+    { "level": 3, "style": "Heading3", "numbering_pattern": "\\d+\\.\\d+\\.\\d+\\s+" }
+  ],
+
+  "references": {
+    "title_style": "Heading1",
+    "body_style": "Reference",
+    "title_text": "参考文献"
+  },
+
+  "word_count_estimate": {
+    "chars_per_page_single_spacing": 1500
+  }
+}

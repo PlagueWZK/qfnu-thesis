@@ -2,7 +2,7 @@
 
 曲阜师范大学论文 .docx 生成器 —— Claude Code 技能。
 
-根据曲阜师范大学论文模板，自动生成格式严格的学术论文 `.docx` 文件。支持理科毕业论文、课程论文报告和用户自定义模板三种模式。
+根据曲阜师范大学论文模板，自动生成格式严格的学术论文 `.docx` 文件。支持内置模板、用户自定义模板库，以及从口头描述或非标准 .docx 归一化创建新模板。
 
 ## 安装
 
@@ -25,11 +25,12 @@ git clone https://github.com/PlagueWZK/qfnu-thesis.git ~/.claude/skills/qfnu-the
 
 ## 支持的模板
 
-| 模板 | 说明 | 结构 |
+| 模板 | 说明 | 来源 |
 |------|------|------|
-| **A — 理科毕业论文** | 曲阜师范大学本科毕业论文格式（理科），标准学术论文结构 | 目录 → 题目 → 中英文摘要 → 正文 → 参考文献 |
-| **B — 课程论文** | 曲阜师范大学课程论文报告格式，带学校 Logo 封面和信息表 | 封面 → 目录 → 题目 → 中英文摘要 → 正文 → 参考文献 |
-| **自定义模板** | 用户提供的 `.docx` 模板文件 | 使用 `analyze_template.py` 自动分析并适配 |
+| **理科毕业论文** | 曲阜师范大学本科毕业论文格式（理科），标准学术论文结构 | 内置 |
+| **课程论文** | 曲阜师范大学课程论文报告格式，带学校 Logo 封面和信息表 | 内置 |
+| **我的模板** | 用户自行归一化或导入的自定义模板，存储在 `templates/` | 用户 |
+| **一次性模板** | 从口头描述或非标准 .docx 临时归一化，不持久化 | 临时 |
 
 ## 使用方式
 
@@ -48,41 +49,55 @@ git clone https://github.com/PlagueWZK/qfnu-thesis.git ~/.claude/skills/qfnu-the
 
 用户提到「生成论文」「毕业论文」「课程论文」「QFNU 论文」等关键词时，技能自动激活。
 
-### 自定义模板
+### 创建自定义模板
 
-如果使用自己的 `.docx` 模板，技能会先用 `analyze_template.py` 分析模板的页面设置、字体层级、样式定义，然后严格按照分析结果生成论文——**不使用 QFNU 默认格式**。
+技能支持将非标准格式输入**归一化**为标准模板 JSON，可选持久化到本地模板库：
 
-支持情况：
-- ✅ 格式完整的 `.docx`（含预定义样式）—— 完美支持
-- ⚠️ 仅有直接格式的 `.docx`（手动改字体，无样式）—— 部分支持
-- ❌ `.doc` 旧格式 —— 需先用 Word 另存为 `.docx`
+- **从 .docx 模板归一化**：`analyze_template.py --output-template` 自动提取样式定义，输出标准模板 JSON
+- **从口头描述归一化**：LLM 按 schema 生成模板 JSON
+- **持久化**：归一化后可保存到 `templates/<id>.json`，纳入模板库供后续复用
+- **临时使用**：不持久化则写入 `.temp/`，本次使用后丢弃
+
+### 内置模板
+
+内置的两个模板以标准模板 JSON 形式存储在 `assets/templates/`：
+
+- `science.json` — 理科毕业论文格式
+- `course.json` — 课程论文格式
+
+技能生成论文时直接读取这些 JSON 文件获取格式参数，不依赖 `.md` 参考文件。
 
 ## 格式保证
 
-本技能处理以下格式细节，确保产出符合曲阜师范大学论文规范：
-
-- **页面设置**：A4 纸，25mm/20mm 边距，5mm 装订线
-- **字体层级**：黑体标题、仿宋体一级标题、宋体正文（模板 A）；课程论文封面使用华文行楷
+- **页面设置**：从模板 JSON 的 `page_setup` 读取
+- **字体层级**：从模板 JSON 的 `styles` 读取每个角色的字体/字号/对齐
 - **目录生成**：手动生成带点线前导符和右对齐页码的立即可见目录
-- **换页规则**：整个正文区域（题目→摘要→正文→参考文献）连续排版，不插入多余换页
-- **中文字体修复**：解决 python-docx 默认生成 MS Mincho 日文字体的问题
-- **封面复制**：模板 B 封面从模板直接复制，保证 Logo 和布局 1:1 还原
+- **换页规则**：由模板 JSON 的 `page_order` 决定
+- **中文字体修复**：生成后自动修复 python-docx 的 east-asia 字体缺陷
+- **封面复制**：封面从源 .docx 模板直接复制，保证 Logo 和布局 1:1 还原
 
 ## 目录结构
 
 ```
 qfnu-thesis/
-├── SKILL.md                         # 技能定义（6 步工作流）
+├── SKILL.md                         # 技能定义
 ├── scripts/
-│   ├── analyze_template.py          # 模板格式分析工具（输出 JSON）
-│   └── update_fields.py             # LibreOffice 域更新（TOC/页码自动填充）
+│   ├── analyze_template.py          # 模板分析工具（支持 --output-template 输出标准模板 JSON）
+│   ├── validate_template.py         # 模板 JSON 校验工具
+│   └── update_fields.py             # LibreOffice 域更新（TOC/页码）
 ├── references/
-│   ├── format-science.md            # 模板 A 格式规范
-│   └── format-course.md             # 模板 B 格式规范
+│   ├── template-schema.md           # 标准模板 JSON Schema 定义
+│   ├── format-science.md            # 理科毕业论文格式（人类参考）
+│   └── format-course.md             # 课程论文格式（人类参考）
 ├── assets/
-│   ├── qfnu-template-science.docx   # 模板 A：理科毕业论文
-│   ├── qfnu-template-course.docx    # 模板 B：课程论文（含封面）
+│   ├── templates/                   # 内置官方模板 JSON（git 跟踪）
+│   │   ├── index.json               # 官方模板索引
+│   │   ├── science.json             # 模板：理科毕业论文
+│   │   └── course.json              # 模板：课程论文
+│   ├── qfnu-template-science.docx   # 模板 A 原始 .docx
+│   ├── qfnu-template-course.docx    # 模板 B 原始 .docx
 │   └── qfnu-logo.png                # 学校 Logo
+├── templates/                       # 用户自定义模板（gitignore 排除）
 └── evals/
     └── evals.json                   # 测试用例
 ```
@@ -91,18 +106,26 @@ qfnu-thesis/
 
 | 依赖 | 用途 | 安装方式 |
 |------|------|----------|
-| `python-docx` | Python .docx 读写 | `pip install python-docx` |
-| `lxml` | XML 处理（字体修复） | `pip install lxml` |
+| `python-docx` | Python .docx 读写 | `pip install --target=.temp python-docx` |
+| `lxml` | XML 处理（字体修复） | `pip install --target=.temp lxml` |
 | `docx` (npm) | JavaScript .docx 创建 | `npm install -g docx` |
 | LibreOffice（可选） | TOC 域自动更新 | 系统包管理器安装 |
 
-> 注：`python-docx` 和 `lxml` 也可放置在技能目录下的 `.temp/` 中，避免全局安装。
+> 注：`python-docx` 和 `lxml` 建议放置在技能目录下的 `.temp/` 中，避免全局安装。
 
 ## 关键设计
 
+### 模板 JSON 是单一真相来源
+
+所有格式参数（字体、字号、行距、页边距、页面顺序、标题层级等）均从标准模板 JSON 文件中读取。`references/format-*.md` 仅为人类参考文档，不直接驱动生成。
+
+### 模板归一化
+
+非标准输入（口头描述、无样式的 .docx）通过 `analyze_template.py` + LLM 推断归一化为标准模板 JSON。归一化结果可临时使用或持久化到本地模板库。
+
 ### 模板先于格式
 
-技能启动时不预加载任何格式规则。先确定用户选择哪个模板，再加载对应的格式参考文件。这避免了不同模板的格式规则在 LLM 上下文中互相干扰。
+技能启动时不预加载任何格式规则。先确定用户选择哪个模板，再加载对应的模板 JSON。避免了不同模板的格式规则在 LLM 上下文中互相干扰。
 
 ### python-docx 中文字体修复
 

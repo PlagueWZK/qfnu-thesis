@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "science",
+      "name": "理科毕业论文",
+      "description": "曲阜师范大学本科毕业论文格式（理科），标准学术论文结构，无封面",
+      "source": "builtin",
+      "file": "science.json"
+    },
+    {
+      "id": "course",
+      "name": "课程论文",
+      "description": "曲阜师范大学课程论文报告格式，带学校Logo封面和个人信息表",
+      "source": "builtin",
+      "file": "course.json"
+    }
+  ]
+}

@@ -1,6 +1,9 @@
 # 曲阜师范大学课程论文报告格式规范
 
-适用模板：`assets/qfnu-template-course.docx`
+> ⚠️ **此文档仅供人类参考**，实际论文生成以 `assets/templates/course.json` 为标准模板 JSON。
+> 生成技能不会读取此文件——所有格式参数从模板 JSON 的 `styles` 和 `page_setup` 字段获取。
+
+适用模板：`assets/qfnu-template-course.docx` / `assets/templates/course.json`
 
 此模板包含**学校 Logo 封面**和**个人信息表**。
 

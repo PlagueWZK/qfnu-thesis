@@ -1,6 +1,9 @@
 # 曲阜师范大学本科毕业论文格式规范（理科）
 
-适用模板：`assets/qfnu-template-science.docx`
+> ⚠️ **此文档仅供人类参考**，实际论文生成以 `assets/templates/science.json` 为标准模板 JSON。
+> 生成技能不会读取此文件——所有格式参数从模板 JSON 的 `styles` 和 `page_setup` 字段获取。
+
+适用模板：`assets/qfnu-template-science.docx` / `assets/templates/science.json`
 
 ---
 
